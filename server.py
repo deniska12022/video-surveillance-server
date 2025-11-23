@@ -11,7 +11,7 @@ logger = logging.getLogger(__name__)
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'video_server_secret_123'
 
-# Инициализируем SocketIO без eventlet сначала
+# Инициализируем SocketIO
 try:
     socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
     logger.info("✅ SocketIO initialized with threading mode")
@@ -206,7 +206,8 @@ if __name__ == '__main__':
     print("=" * 60)
     
     try:
-        socketio.run(app, host='0.0.0.0', port=port, debug=False)
+        # 🔥 ДОБАВЛЯЕМ allow_unsafe_werkzeug=True
+        socketio.run(app, host='0.0.0.0', port=port, debug=False, allow_unsafe_werkzeug=True)
     except Exception as e:
         logger.error(f"💥 Server crash: {e}")
         raise
